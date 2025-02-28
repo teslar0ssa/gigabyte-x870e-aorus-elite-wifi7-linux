@@ -1,0 +1,1 @@
+# gigabyte-x870e-aorus-elite-wifi7-linux
