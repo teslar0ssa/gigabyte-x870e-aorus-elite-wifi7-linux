@@ -1,7 +1,8 @@
 # Gigabyte X870E Aorus Elite WiFi7 Linux Shenanigans
 This exists as I recently built a system based on this motherboard (Rev 1.1) running Fedora 41 and was encouraged by a friend (Thanks, Jason) to documnet the little tidbits needed to get some of the extras working, and hopefully tracking the progress of making all this work as time goes on. 
 
-_Note: This is all for my system, running the Rev 1.1 version of this board, 9950X CPU, 192GB Corsair Dominator Platnium RAM, 2x WD850X M.2 4TB, and a RTX 3080 FE, BIOS F4a._
+> [!NOTE]
+> _Specifications for referece: Rev 1.1 board, 9950X CPU, 192GB Corsair Dominator Platnium RAM, 2x WD850X M.2 4TB, nVidia RTX 3080 FE, and BIOS F4a._
 
 ## What works out of the box? 
 Short answer, nearly everything "works." 
@@ -19,7 +20,8 @@ description = Digital Stereo (IEC958) Output + Analog Stereo Duplex
 output-mappings = analog-stereo iec958-stereo
 input-mappings = analog-stereo
 ```
-_NOTE: I did have some update change where this file was located which broke my audio devices. I ultimately ended up creating a new `9999-custom.conf` file in `~/.config/alsa-card-profile` and symlinking it to the above location to hopefully preserve the file if something messes with it later._
+> [!TIP]
+> _I did have some update change where this file was located which broke my audio devices. I ultimately ended up creating a new `9999-custom.conf` file in `~/.config/alsa-card-profile` and symlinking it to the above location to hopefully preserve the file if something messes with it later._
 
 You'll need to restart the audio stack (`systemctl --user restart pipewire`) to get the changes to take place, but once you do you'll be able to select the Digital (S/PDIF) and Analog (Line Out) outputs separately for individual apps without issue. 
 
@@ -40,7 +42,8 @@ make
 sudo make install
 sudo modprobe it87 ignore_resource_conflict=1 force_id=0x8622
 ```
-_NOTE: The `ignore_resource_conflict=1` can be omitted if you're running with the kernel argument `acpi_enforce_resources=lax` which some folks might be doing for RGB shenanigans or other similar low level shenanigans. You can try it with/without before doign t he below steps to determine what you need. You can run `modprobe -r it87` to unload it when doing testing without having to reboot._
+> [!TIP]
+> _The `ignore_resource_conflict=1` can be omitted if you're running with the kernel argument `acpi_enforce_resources=lax` which some folks might be doing for RGB control or other similar low level shenanigans. You can try it with/without before doign t he below steps to determine what you need. You can run `modprobe -r it87` to unload it when doing testing without having to reboot._
 
 Once you've got it working in "testing" go ahead and set it up to work every time on boot with the following commands:
 ```
@@ -49,7 +52,8 @@ sudo echo "it87 ignore_resource_conflict=1 force_id=0x8622" > /etc/modprobe.d/it
 sudo touch /etc/modules-load.d/it87.conf
 sudo echo "it87" > /etc/modules-load.d/it87.conf
 ```
-_NOTE: On that 2nd line, be sure to reflect the appropriate command if you do or do not use the `ignore_resource_conflict=1` bit._
+> [!IMPORTANT]
+> _On that 2nd line, be sure to reflect the appropriate command if you do or do not use the `ignore_resource_conflict=1` bit._
 
 Now, when you run `sensors` you should see not only the fans, but some voltages, temperatures, and the status of the intrusion header:
 ```
@@ -75,10 +79,21 @@ temp3:        +49.0°C  (low  = +127.0°C, high = +127.0°C)
 temp4:        +51.0°C  
 intrusion0:  ALARM
 ```
-For reference, fan1 is `CPU_FAN`, fan2-4 are the `SYS_FAN1` thru `SYS_FAN3` headers, and I presume fan5 is the `FAN4_PUMP` header but I didn't verify it in my setup. I am unclear on all of the temperature sensors (and if someone put a PR in to update it I'd take it) but I am pretty sure `temp2` is the AMD chipset as it's warmer than the rest. Checking [the manual](https://www.gigabyte.com/Motherboard/X870E-AORUS-ELITE-WIFI7-rev-10-11/support#support-manual) it looks like there are 3 temp sensors on the board indicated (see "1-1 Motherboard Layout" on page 4) but this module reports 4 temp sensors while the `gigabyte_wmi` one reports 5. I am unsure what they all represent. 
+Here's a reference table for the name returned by `sensors` with the actual header name as printed on the motherboard's silkscreen: 
+
+| `sensors` name | mobo header |
+|--------------|-------------|
+| fan1         | CPU_FAN     |
+| fan2         | SYS_FAN1    |
+| fan3         | SYS_FAN2    |
+| fan4         | SYS_FAN3    |
+| fan5         | FAN4_PUMP   |
+
+It doesn't appear `CPU_OPT` has a reporting sensor, but I suspect it's rarely used and not critical here. I am also unclear on all of the temperature sensors (and if someone put a PR in to update it I'd take it) but I am pretty sure `temp2` is the AMD chipset as it's warmer than the rest. Checking [the manual](https://www.gigabyte.com/Motherboard/X870E-AORUS-ELITE-WIFI7-rev-10-11/support#support-manual) it looks like there are 3 temp sensors on the board indicated (see "1-1 Motherboard Layout" on page 4) but this module reports 4 temp sensors while the `gigabyte_wmi` one reports 5. I am unsure what they all represent or why there's a discrepancy between the two. 
 
 ### RGB Control (via OpenRGB) ...and RAM/SPD temps too!
-_If you don't want RGB, you might still want to do the `i2c` stuff so you can view the RAM module temps._
+> [!TIP]
+> _If you don't want RGB, you might still want to do the `i2c` stuff so you can view the RAM module temps._
 
 I tried to avoid RGB in this build as much as possible, unlike my gaming rig which looks like unicorn vomit, but alas the market dictated otherwise. I ended up with some Corsair Dominator Platnium RGB RAM as it was something like $60 or $80 cheaper than non-RGB RAM. (Also, after getting this PC working I learned that my cat seemed to miss the RGB of my old system that used to be here as he seemed pleased to stare at the RAM in unicorn vomit mode while dozing off...many apologies to you, Sagan, for taking away your joy for a few months.) As a side effect of wanting to be able to control the RGB of this RAM, I also enabled the ability see the RAM module temp sensors and dim the annoying GEFORCE RTX logo on my 3080 FE card that defaults to a brightness level I can only describe as "the sun." 
 
