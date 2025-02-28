@@ -77,5 +77,19 @@ intrusion0:  ALARM
 ```
 For reference, fan1 is `CPU_FAN`, fan2-4 are the `SYS_FAN1` thru `SYS_FAN3` headers, and I presume fan5 is the `FAN4_PUMP` header but I didn't verify it in my setup. I am unclear on all of the temperature sensors (and if someone put a PR in to update it I'd take it) but I am pretty sure `temp2` is the AMD chipset as it's warmer than the rest. Checking [the manual](https://www.gigabyte.com/Motherboard/X870E-AORUS-ELITE-WIFI7-rev-10-11/support#support-manual) it looks like there are 3 temp sensors on the board indicated (see "1-1 Motherboard Layout" on page 4) but this module reports 4 temp sensors while the `gigabyte_wmi` one reports 5. I am unsure what they all represent. 
 
-### RGB Control (via OpenRGB)
-Information coming soon. I need to hit save before I lose everything I've already typed. 
+### RGB Control (via OpenRGB) ...and RAM/SPD temps too!
+_If you don't want RGB, you might still want to do the `i2c` stuff so you can view the RAM module temps._
+
+I tried to avoid RGB in this build as much as possible, unlike my gaming rig which looks like unicorn vomit, but alas the market dictated otherwise. I ended up with some Corsair Dominator Platnium RGB RAM as it was something like $60 or $80 cheaper than non-RGB RAM. (Also, after getting this PC working I learned that my cat seemed to miss the RGB of my old system that used to be here as he seemed pleased to stare at the RAM in unicorn vomit mode while dozing off...many apologies to you, Sagan, for taking away your joy for a few months.) As a side effect of wanting to be able to control the RGB of this RAM, I also enabled the ability see the RAM module temp sensors and dim the annoying GEFORCE RTX logo on my 3080 FE card that defaults to a brightness level I can only describe as "the sun." 
+
+First off I'll note that I had quite a bit of issues with the RPM Fusion abd Flatpak/Flathub versions. I just snagged the latest Linux amd64 build [from their OpenRGB.org home page](https://openrgb.org/releases.html) and it worked fine, the latest version may change over time of course. I'm running `openrgb_1.0rc1_x86_64_f40_1fbacde.rpm` currently and everything works as expected, for whatever that's worth.
+
+The RGB/temp sensors for these seem to live ont eh `i2c` bus and just need a litle help getting enabled:
+```
+sudo touch /etc/modules-load.d/i2c.conf
+sudo echo "i2c-dev" > /etc/modules-load.d/i2c.conf
+sudo echo "i2c-piix4" > /etc/modules-load.d/i2c.conf
+```
+This should start the necessary i2c components on boot, but you can fire them up manually with `modprobe i2c-dev` and `modprobe i2c-piix4`. This was all that was needed to start having the RAM/SPD temps show in `sensors` and the RGB control to become available in `OpenRGB`. I didn't need to install anything extra, but I did install `i2c-tools` via `dnf` to be able to run diagnostic commands like `i2cdetect`. You may be able to get by without these. 
+
+One annoyance is there's some RGB on the motherboard it self that doesn't appear to be controllable. There's [an open issue](https://gitlab.com/CalcProgrammer1/OpenRGB/-/issues/4306) for it (many other Gigabyte boards included) and have been merged into this issue. I signed up for notifications and hope to solve it once it's merged as it appears they do have it sorted. Until then, that one LED under a heatsink shines bright white. 
