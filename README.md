@@ -1,5 +1,5 @@
 # Gigabyte X870E Aorus Elite WiFi7 Linux Shenanigans
-This exists as I recently built a system based on this motherboard (Rev 1.1) running Fedora 41 and was encouraged by a friend (Thanks, Jason) to documnet the little tidbits needed to get some of the extras working, and hopefully tracking the progress of making all this work as time goes on. 
+This exists as I recently built a system based on this motherboard (Rev 1.1) running Fedora 41 and was encouraged by a friend (Thanks, Jason) to document the little tidbits needed to get some of the extras working, and hopefully tracking the progress of making all this work as time goes on. 
 
 > [!NOTE]
 > _Specifications for referece: Rev 1.1 board, 9950X CPU, 192GB Corsair Dominator Platnium RAM, 2x WD850X M.2 4TB, nVidia RTX 3080 FE, and BIOS F4a._
@@ -43,7 +43,7 @@ sudo make install
 sudo modprobe it87 ignore_resource_conflict=1 force_id=0x8622
 ```
 > [!TIP]
-> _The `ignore_resource_conflict=1` can be omitted if you're running with the kernel argument `acpi_enforce_resources=lax` which some folks might be doing for RGB control or other similar low level shenanigans. You can try it with/without before doign t he below steps to determine what you need. You can run `modprobe -r it87` to unload it when doing testing without having to reboot._
+> _The `ignore_resource_conflict=1` can be omitted if you're running with the kernel argument `acpi_enforce_resources=lax` which some folks might be doing for RGB control or other similar low level shenanigans. You can try it with/without before doign the below steps to determine what you need. You can run `modprobe -r it87` to unload it when doing testing without having to reboot._
 
 Once you've got it working in "testing" go ahead and set it up to work every time on boot with the following commands:
 ```
