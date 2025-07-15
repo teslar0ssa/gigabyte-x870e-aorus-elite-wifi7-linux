@@ -2,7 +2,7 @@
 This exists as I recently built a system based on this motherboard (Rev 1.1) running Fedora 41 and was encouraged by a friend (Thanks, Jason) to document the little tidbits needed to get some of the extras working, and hopefully tracking the progress of making all this work as time goes on. 
 
 > [!NOTE]
-> _Specifications for referece: Rev 1.1 board, 9950X CPU, 192GB Corsair Dominator Platnium RAM, 2x WD850X M.2 4TB, nVidia RTX 3080 FE, and BIOS F4a. As of 15-JUl-25 system is running Fedora 42 and Gnome 48.2_
+> _Specifications for referece: Rev 1.1 board, 9950X CPU, 192GB Corsair Dominator Platnium RAM, 2x WD850X M.2 4TB, nVidia RTX 3080 FE, and BIOS F4a. As of 15-JUL-25 system is running Fedora 42 and Gnome 48.2_
 
 ## What works out of the box? 
 Short answer, nearly everything "works." 
