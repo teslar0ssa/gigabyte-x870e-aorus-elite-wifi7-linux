@@ -11,6 +11,8 @@ There's just some small deeper things that need some help. Most notably, audio o
 
 ## Getting Things Working
 ### Audio Output Control
+#### UPDATE 15 JUL 25: I don't recall when, but sometime in the last couple of months an update enabled `pavucontrol` to enable "Pro Mode" on the "Family 17h/19h/1ah HD Audio Controller." Doing this split out the analog and digital outputs rendering the need to do the below obselete. You can now just flip to "Pro Mode" and the two outputs are split to "Pro" and "Pro 1" giving me all the control I wanted. This also seems to survive updates and reboots without an issue. You can still do the below, but IDK why you would. I'd like to rename the devices, but I haven't dug into how yet. Will update when/if I do...I'm mostly just lazy.
+
 First primary issue I had was there's no way to simultaneously output to both the Analog Line Out jack and the Digital S/PDIF jack. In my use case I run my headphones through a bluetooth DAC that properly support sthe higher quality audio codec and my speakers are usually just for system noises. When in a focus mode I like to funnel only music and meeting/chat/etc... to the headset and having the system dings/beeps for Slack, Teams, EMail, etc... were distracting. This was a fairly simple fix: 
 
 From [this](https://unix.stackexchange.com/questions/655767/simultaneous-digital-and-analog-output-on-pipewire) StackExchange post I placed the following in the `9999-custom.conf` file located in `/usr/share/alsa-card-profile/mixer/profile-sets/`:
