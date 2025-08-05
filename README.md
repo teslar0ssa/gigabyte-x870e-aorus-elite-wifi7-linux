@@ -2,7 +2,7 @@
 This exists as I recently built a system based on this motherboard (Rev 1.1) running Fedora 41 and was encouraged by a friend (Thanks, Jason) to document the little tidbits needed to get some of the extras working, and hopefully tracking the progress of making all this work as time goes on. 
 
 > [!NOTE]
-> _Specifications for referece: Rev 1.1 board, 9950X CPU, 192GB Corsair Dominator Platnium RAM, 2x WD850X M.2 4TB, nVidia RTX 3080 FE, and BIOS F4a. As of 15-JUL-25 system is running Fedora 42 and Gnome 48.2_
+> _Specifications for referece: Rev 1.1 board, 9950X CPU, 192GB Corsair Dominator Platnium RAM, 2x WD850X M.2 4TB, ~~nVidia RTX 3080 FE~~, and BIOS F4a. As of 15-JUL-25 system is running Fedora 42 and Gnome 48.2. As of 05-AUG_25 the reference system is now running a Gigabyte Radeon RX 9070 Gaming OC GPU, but I've left inthe nVidia information for reference._
 
 ## What works out of the box? 
 Short answer, nearly everything "works." 
@@ -99,7 +99,7 @@ It doesn't appear `CPU_OPT` has a reporting sensor, but I suspect it's rarely us
 
 I tried to avoid RGB in this build as much as possible, unlike my gaming rig which looks like unicorn vomit, but alas the market dictated otherwise. I ended up with some Corsair Dominator Platnium RGB RAM as it was something like $60 or $80 cheaper than non-RGB RAM. (Also, after getting this PC working I learned that my cat seemed to miss the RGB of my old system that used to be here as he seemed pleased to stare at the RAM in unicorn vomit mode while dozing off...many apologies to you, Sagan, for taking away your joy for a few months.) As a side effect of wanting to be able to control the RGB of this RAM, I also enabled the ability see the RAM module temp sensors and dim the annoying GEFORCE RTX logo on my 3080 FE card that defaults to a brightness level I can only describe as "the sun." 
 
-First off I'll note that I had quite a bit of issues with the RPM Fusion abd Flatpak/Flathub versions. I just snagged the latest Linux amd64 build [from their OpenRGB.org home page](https://openrgb.org/releases.html) and it worked fine, the latest version may change over time of course. I'm running `openrgb_1.0rc1_x86_64_f40_1fbacde.rpm` currently and everything works as expected, for whatever that's worth.
+First off I'll note that I had quite a bit of issues with the RPM Fusion abd Flatpak/Flathub versions. I just snagged the latest Linux amd64 build [from their OpenRGB.org home page](https://openrgb.org/releases.html) and it worked fine, the latest version may change over time of course. As of 05-AUG-25 I'm running the "Linux amd64 (AppImage)" Pipeline (Experimental) build of OpenRGB available from [https://openrgb.org/releases.html](https://openrgb.org/releases.html) and everything works as expected, for whatever that's worth. At the time of this writing, that's build `4639833b`. Switching to the Pipeline build lets me control the motherboard RGB that wasn't working before and mentioned below. 
 
 The RGB/temp sensors for these seem to live ont eh `i2c` bus and just need a litle help getting enabled:
 ```
@@ -108,5 +108,8 @@ sudo echo "i2c-dev" > /etc/modules-load.d/i2c.conf
 sudo echo "i2c-piix4" > /etc/modules-load.d/i2c.conf
 ```
 This should start the necessary i2c components on boot, but you can fire them up manually with `modprobe i2c-dev` and `modprobe i2c-piix4`. This was all that was needed to start having the RAM/SPD temps show in `sensors` and the RGB control to become available in `OpenRGB`. I didn't need to install anything extra, but I did install `i2c-tools` via `dnf` to be able to run diagnostic commands like `i2cdetect`. You may be able to get by without these. 
+
+> [!NOTE]
+> _The below section calls out some onboard motherboard RGB that's not controllable with the latest stable release of OpenRGB, but I'm now running the Pipeline (Experimental) build (specifically `4639833b`) and I am able to control it. The only thing I cannot control now is the RGB on my new Gigabyte Radeon RX 9070 GAMING OC GPU. I'm leaving the not below up until all of this is in the latest stable release of OpenRGB._
 
 One annoyance is there's some RGB on the motherboard it self that doesn't appear to be controllable. There's [an open issue](https://gitlab.com/CalcProgrammer1/OpenRGB/-/issues/4306) for it (many other Gigabyte boards included) and have been merged into this issue. I signed up for notifications and hope to solve it once it's merged as it appears they do have it sorted. Until then, that one LED under a heatsink shines bright white. 
