@@ -101,6 +101,9 @@ I tried to avoid RGB in this build as much as possible, unlike my gaming rig whi
 
 First off I'll note that I had quite a bit of issues with the RPM Fusion abd Flatpak/Flathub versions. I just snagged the latest Linux amd64 build [from their OpenRGB.org home page](https://openrgb.org/releases.html) and it worked fine, the latest version may change over time of course. As of 05-AUG-25 I'm running the "Linux amd64 (AppImage)" Pipeline (Experimental) build of OpenRGB available from [https://openrgb.org/releases.html](https://openrgb.org/releases.html) and everything works as expected, for whatever that's worth. At the time of this writing, that's build `4639833b`. Switching to the Pipeline build lets me control the motherboard RGB that wasn't working before and mentioned below. 
 
+> [!IMPORTANT]
+> _If you choose to use the AppImage build, or another "non-installed" build, you need to manually install the Udev rules otherweise OpenRGB won't be able to access USB, I2C, and SMBus interfaces properly. You can find the release version of the Udev Rules Script [here](https://openrgb.org/udev.html). Additionally, if you're using an experimental build, some of them will come with an updated Udev rules file that you should use (via manual installation) for support of the newest devices._
+
 The RGB/temp sensors for these seem to live ont eh `i2c` bus and just need a litle help getting enabled:
 ```
 sudo touch /etc/modules-load.d/i2c.conf
